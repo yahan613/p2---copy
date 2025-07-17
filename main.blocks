@@ -1,0 +1,8 @@
+<xml xmlns="https://developers.google.com/blockly/xml"><variables><variable id="vJz|6UYYYjRVeiLXlbHB">x</variable><variable id="eCQ:)biMP%vty.^C_/N[">y</variable><variable id="D8wV,Qbg_s{hOFHB%bwa">z</variable><variable id="{.9VKjwV`#sUsCPq*0Yb">BTflag</variable><variable id=")B39X[MJOqtn?M{i@4.2">raw</variable><variable id="K52EvMj3j6S)=?$+bCc0">value</variable><variable id="+||}0kRcFBcV?A{4+(Ew">ID</variable><variable id="`Gf.ZcYj65F#Drn*|q`s">times</variable><variable id="}nD!Nara.~SxEU%qv%Ai">SPflag</variable><variable id="-MX8sd#E!#LR$sNVfzZl">test</variable></variables><comment id="`dL?cd4aQYR+#j,cBRt?" x="1241" y="875" w="177" h="120">
+計算偵測總次數
+</comment><comment id="6fG%+7AV?3,fC~#3mpmZ" x="1463" y="875" w="320" h="160">
+basic.forever(function () {
+Count_Elbow_extension(x , y, z);
+basic.showNumber(times)
+})
+</comment></xml>
