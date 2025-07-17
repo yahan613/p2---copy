@@ -1,15 +1,6 @@
 /**
  * 計算偵測總次數
  */
-/**
- * basic.forever(function () {
- * 
- * Count_Elbow_extension(x , y, z);
- * 
- * basic.showNumber(times)
- * 
- * })
- */
 // control.inBackground(function on_in_background() {
 // 
 // while (true) {
@@ -34,14 +25,7 @@ function Acceleration () {
     serial.writeValue("X", x)
     serial.writeValue("Y", y)
     serial.writeValue("Z", z)
-    basic.pause(100)
-}
-function Count_Elbow_extension (x: number, y: number, z: number) {
-    if (x >= 1050) {
-        if (y >= -300) {
-            times = times + 1
-        }
-    }
+    serial.writeValue("SPflag", SPflag)
     basic.pause(100)
 }
 bluetooth.onBluetoothConnected(function () {
@@ -97,7 +81,19 @@ let value = 0
 ID = 100
 bluetooth.startUartService()
 bluetooth.setTransmitPower(7)
+/**
+ * basic.forever(function () {
+ * 
+ * Count_Elbow_extension(x , y, z);
+ * 
+ * basic.showNumber(times)
+ * 
+ * })
+ */
 basic.forever(function () {
+    Arm.Elbow_extension(x, y, z);
+    basic.showNumber(times)
+    pause(100)
     if (BTflag == 1) {
         switch(ID){
            case 1: //手臂彎舉
@@ -109,12 +105,13 @@ basic.forever(function () {
             default:
                 break;
         }
-basic.showNumber(times)
+    basic.showNumber(times)
         bluetooth.uartWriteNumber(times)
         pause(100)
     }
 })
 basic.forever(function () {
+    Acceleration()
     if (BTflag == 1) {
         Acceleration()
     }
