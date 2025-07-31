@@ -64,7 +64,8 @@ basic.showNumber(2)
     pause(1000)
 basic.showNumber(1)
     pause(1000)
-BTflag = 1
+    start = 1
+    //BTflag = 1
 }
 let raw = ""
 let times = 0
@@ -76,7 +77,11 @@ let SPflag = 0
 let BTflag = 0
 let test = 0
 let ID = 0
+let start = 0
 let value = 0
+
+//按鈕事件偵測變數
+let press = 1; 
 // 運動動作ID
 ID = 100
 bluetooth.startUartService()
@@ -91,13 +96,19 @@ bluetooth.setTransmitPower(7)
  * })
  */
 basic.forever(function () {
-    Arm.Elbow_extension(x, y, z);
-    basic.showNumber(times)
+    if(start == 0) Countdown();
+    else if (start == 1 && press ==1) {
+        Back.Count_ShoulderPress(x, y, z);
+        basic.showNumber(times)
+    }
+    else if (press == 0) {
+        basic.showString("P");
+    }
     pause(100)
     if (BTflag == 1) {
         switch(ID){
            case 1: //手臂彎舉
-                Arm.Count_Curl(x, y, z);
+                //Arm.Count_Curl(x, y, z);
                 break;
             case 2: //肩推
                 Back.Count_ShoulderPress(x, y, z);
@@ -115,4 +126,19 @@ basic.forever(function () {
     if (BTflag == 1) {
         Acceleration()
     }
+
+})
+
+input.onButtonPressed(Button.A, function () {
+    if (true){
+        if (press == 1) press = 0;
+        else {
+            press = 1;
+            start = 0;
+        }
+    }    
+})
+
+input.onButtonPressed(Button.B, function () {
+   times = 0; 
 })
