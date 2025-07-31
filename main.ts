@@ -98,7 +98,7 @@ bluetooth.setTransmitPower(7)
 basic.forever(function () {
     if(start == 0) Countdown();
     else if (start == 1 && press ==1) {
-        Back.Count_ShoulderPress(x, y, z);
+        Back.Count_CableRow(x, y, z);
         basic.showNumber(times)
     }
     else if (press == 0) {
