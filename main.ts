@@ -73,6 +73,7 @@ let test = 0
 let ID = 0
 let start = 0
 let value = 0
+let status = "play"
 
 //按鈕事件偵測變數
 let press = 1;
@@ -92,7 +93,7 @@ bluetooth.setTransmitPower(7)
 basic.forever(function () {
     pause(100)
     if (BTflag == 1) {
-        if (start == 1 && press == 1) {
+        if (press == 1) {
             switch (ID) {
                 case 1: //手臂彎舉
                     Arm.Count_Curl(x, y, z);
@@ -112,12 +113,14 @@ basic.forever(function () {
                 default:
                     break;
             }
+            basic.showNumber(times)
+            bluetooth.uartWriteNumber(times)
         }
         else if (press == 0) {
             basic.showString("P");
+            bluetooth.uartWriteString("pause");
+
         }
-        basic.showNumber(times)
-        bluetooth.uartWriteNumber(times)
         pause(100)
     }
 })
@@ -132,12 +135,15 @@ basic.forever(function () {
 
 //按鈕偵測
 input.onButtonPressed(Button.A, function () {
-    if (BTflag == 1) {
-        if (press == 1) press = 0;
-        else {
-            press = 1;
-            start = 0;
-        }
+    if (press == 1) {
+        BTflag == 1
+        press = 0;
+        status = "play"
+    }
+    else {
+        status = "pause"
+        press = 1;
+        //start = 0;
     }
 })
 
