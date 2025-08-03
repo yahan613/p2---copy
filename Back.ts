@@ -18,11 +18,11 @@ namespace Back {
     }
 
     export function Count_ChestPress(x: number, y: number, z: number) {
-        if (y >= -800) { //包含重力加速度
+        if (y >= -820) { //包含重力加速度
             SPflag = 1;
         }
         else if (SPflag == 1) {
-            if (y <= -900) { //包含重力加速度
+            if (y <= -1000) { //包含重力加速度
                 times = times + 1;
                 SPflag = 2;
             }
@@ -31,7 +31,7 @@ namespace Back {
         basic.pause(100)
     }
 
-    export function Count_CableRow(x: number, y: number, z: number) {
+    export function Seated_row(x: number, y: number, z: number) {
         if (y >= 30) { //包含重力加速度
             serial.writeValue("AA", 1)
             SPflag = 1;

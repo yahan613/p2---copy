@@ -18,7 +18,7 @@
 // }
 // 
 // })
-function Acceleration () {
+function Acceleration() {
     x = input.acceleration(Dimension.X)
     y = input.acceleration(Dimension.Y)
     z = input.acceleration(Dimension.Z)
@@ -37,35 +37,29 @@ bluetooth.onBluetoothDisconnected(function () {
 })
 // 傳送動作ID給藍牙裝置
 bluetooth.onUartDataReceived(serial.delimiters(Delimiters.NewLine), function () {
-    raw = bluetooth.uartReadUntil(serial.delimiters(Delimiters.NewLine))
+    let raw = bluetooth.uartReadUntil(serial.delimiters(Delimiters.NewLine)).trim()
     value = parseInt(raw)
+
     // 檢查是否為有效的數字
     if (isNaN(value)) {
         // 顯示錯誤訊息
-        basic.showIcon(IconNames.Sad)
+        serial.writeString(raw)
     } else {
-        ID = value
-        switch(value){
-            case 1:
-                Countdown();
-                break;
-            case 0:
-                BTflag = 0;
-                basic.showIcon(IconNames.Asleep)
-            default:
-                break;
-        }
+        times = 0;
+        BTflag = 0;
+        ID = value;
+        Countdown();
     }
 })
-function Countdown () {
+function Countdown() {
     basic.showNumber(3)
     pause(1000)
-basic.showNumber(2)
+    basic.showNumber(2)
     pause(1000)
-basic.showNumber(1)
+    basic.showNumber(1)
     pause(1000)
     start = 1
-    //BTflag = 1
+    BTflag = 1
 }
 let raw = ""
 let times = 0
@@ -81,7 +75,7 @@ let start = 0
 let value = 0
 
 //按鈕事件偵測變數
-let press = 1; 
+let press = 1;
 // 運動動作ID
 ID = 100
 bluetooth.startUartService()
@@ -96,49 +90,57 @@ bluetooth.setTransmitPower(7)
  * })
  */
 basic.forever(function () {
-    if(start == 0) Countdown();
-    else if (start == 1 && press ==1) {
-        Back.Count_CableRow(x, y, z);
-        basic.showNumber(times)
-    }
-    else if (press == 0) {
-        basic.showString("P");
-    }
     pause(100)
     if (BTflag == 1) {
-        switch(ID){
-           case 1: //手臂彎舉
-                //Arm.Count_Curl(x, y, z);
-                break;
-            case 2: //肩推
-                Back.Count_ShoulderPress(x, y, z);
-                break;
-            default:
-                break;
+        if (start == 1 && press == 1) {
+            switch (ID) {
+                case 1: //手臂彎舉
+                    Arm.Count_Curl(x, y, z);
+                    break;
+                case 2: //肩推
+                    Back.Count_ShoulderPress(x, y, z);
+                    break;
+                case 3: //手臂伸展
+                    Arm.Elbow_extension(x, y, z);
+                    break;
+                case 4: //胸推
+                    Back.Count_ChestPress(x, y, z);
+                    break;
+                case 5: //划船
+                    Back.Seated_row(x, y, z);
+                    break;
+                default:
+                    break;
+            }
         }
-    basic.showNumber(times)
+        else if (press == 0) {
+            basic.showString("P");
+        }
+        basic.showNumber(times)
         bluetooth.uartWriteNumber(times)
         pause(100)
     }
 })
+
+//加速度偵測
 basic.forever(function () {
-    Acceleration()
     if (BTflag == 1) {
         Acceleration()
     }
 
 })
 
+//按鈕偵測
 input.onButtonPressed(Button.A, function () {
-    if (true){
+    if (BTflag == 1) {
         if (press == 1) press = 0;
         else {
             press = 1;
             start = 0;
         }
-    }    
+    }
 })
 
 input.onButtonPressed(Button.B, function () {
-   times = 0; 
+    times = 0;
 })
