@@ -23,6 +23,7 @@ let status = "play"
 let press = 1
 // 運動動作ID
 ID = 100
+let startDebugger = 0; //一開始的運動會出錯
 
 // 倒數計時相關變數
 /*let countdownActive = false
@@ -44,14 +45,19 @@ bluetooth.onUartDataReceived(serial.delimiters(Delimiters.NewLine), function () 
         serial.writeString(raw)
     } else {
         times = 0
-        BTflag = 0
         ID = value
         serial.writeValue("ID1", ID)
-        if (ID != 0) {
+        if (ID >= 10) { //第二組(以上)運動
+            BTflag =0
             Countdown(ID)
         }
-        else{
+        else if (ID > 0 && startDebugger == 0){ //第一組運動
+            startDebugger = 1;
+            Countdown(ID)
+        }
+        else if(ID == 0){  //結束運動
             basic.showIcon(IconNames.Happy)
+            startDebugger = 0;
         }
     }
 })
@@ -124,39 +130,16 @@ function Countdown(Countdown_id: number) {
         ID = Countdown_id / 10
         serial.writeValue("ID2", ID)
         baseValue = 9
-    } else {
+        CountingFunction.CountDown(baseValue)  
+    } else if(startDebugger == 1){
         baseValue = 3
+        CountingFunction.CountDown(baseValue)
+    }
+    else{
+        start = 1
+        BTflag = 1
     }
 
-    countdownActive = true
-    countdownStart = control.millis()
-    countdownEnd = countdownStart + (baseValue) * 1000
-
-    control.inBackground(function () {
-        let prevSec = -1
-        while (countdownActive) {
-            let now = control.millis()
-            let remainingMs = countdownEnd - now
-            if (remainingMs <= 0) {
-                countdownActive = false
-                start = 1
-                BTflag = 1
-                basic.showNumber(0)
-                break
-            }
-            // 只在整秒變化時更新顯示（避免閃爍）
-            let sec = Math.ceil(remainingMs / 1000)
-            if (sec != prevSec) {
-                prevSec = sec
-                basic.showNumber(sec)
-            }
-            // 小延遲避免過多刷新，但不影響精度
-            control.waitMicros(50000)  // 50ms
-            if (baseValue == 3) {
-                bluetooth.uartWriteString("connected")
-            }
-        }
-    })
 }
 
 bluetooth.startUartService()
@@ -165,6 +148,7 @@ bluetooth.setTransmitPower(7)
 basic.forever(function () {
     pause(100)
     serial.writeValue("ID", ID)
+    serial.writeValue("BTflag == 1", BTflag)
     if (BTflag == 1) {
             if (press == 1) {
                 switch (ID) {

@@ -14,7 +14,8 @@
         "Back.ts",
         "Arm.ts",
         "main.py",
-        "custom.ts"
+        "custom.ts",
+        "CountingFunc.ts"
     ],
     "testFiles": [
         "test.ts"
