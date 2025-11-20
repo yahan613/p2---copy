@@ -18,11 +18,11 @@ namespace Back {
     }
 
     export function Count_ChestPress(x: number, y: number, z: number) {
-        if (y >= -820) { //包含重力加速度
+        if (y >= -850) { //包含重力加速度
             SPflag = 1;
         }
         else if (SPflag == 1) {
-            if (y <= -1000) { //包含重力加速度
+            if (y <= -920) { //包含重力加速度
                 times = times + 1;
                 SPflag = 2;
             }
